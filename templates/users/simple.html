@@ -1,0 +1,58 @@
+<!-- <!DOCTYPE html>
+<html>
+<head>
+	<title>simple maps page</title>
+</head>
+<body>
+	<iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d15551.702742106041!2d77.52972380478515!3d12.976604892054867!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae3ddddccc3acb%3A0x4ea472db769a21aa!2sVijayanagar!5e0!3m2!1sen!2sin!4v1574246030894!5m2!1sen!2sin" width="600" height="450" frameborder="0" style="border:0;" allowfullscreen=""></iframe>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Simple Map</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>{% load static %}
+  <body>
+    <div id="map"></div>
+    <div><img src="{% static 'images/locate3.png' %}" style="position: fixed;  top: 50%;  left: 50%;  transform: translate(-50%, -50%); padding-bottom: 45px;"></div>
+    <script>
+      var map;
+      function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+          center: {lat: -34.397, lng: 150.644},
+          zoom: 8
+        });
+        map.addListener('click', function(e) {
+          placeMarkerAndPanTo(e.latLng, map);
+        });
+      }
+
+      function placeMarkerAndPanTo(latLng, map) {
+        var marker = new google.maps.Marker({
+          position: latLng,
+          map: map
+        });
+        map.panTo(latLng);
+
+      }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyClfKSXKMJ32Uogcogc-idokYjhCcGyd2Y&callback=initMap"
+    async defer></script>
+  </body>
+</html>

@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Login Page</title>
+</head>
+{% load static %}
+<body style="background-image: url({% static 'images/OG1FLx.jpg' %})">
+	<form method="POST" enctype="html/text" action="{% url 'signup' %}" >
+		{% csrf_token %}
+	{{usfo.as_table}}
+	<input type="submit" name="submit" value="SUBMIT">
+	</form>
+</body>
+</html>
+<!-- var newlatlng= new google.maps.LatLng(latLng.lat()-0.090000000000,latLng.lng()) -->
