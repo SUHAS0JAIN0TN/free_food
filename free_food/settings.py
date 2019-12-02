@@ -25,7 +25,7 @@ SECRET_KEY = 'gpz9f+lx5b#&t)d6--abc^8jbbilqj)g=whbcfv6buat+cl+sm'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['0.0.0.0','ancient-fortress-17652.herokuapp.com']
 
 # Application definition
 
