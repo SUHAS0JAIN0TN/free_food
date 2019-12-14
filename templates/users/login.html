@@ -5,10 +5,35 @@
 </head>
 {% load static %}
 <body style="background-image: url({% static 'images/OG1FLx.jpg' %})">
-	<form method="POST" enctype="html/text" action="{% url 'login' %}" >
+	<!-- <form method="POST" enctype="html/text" action="{% url 'login' %}" >
 		{% csrf_token %}
 		{{usfo.as_table}}
 	<input type="submit" name="submit" value="SUBMIT">
-	</form>
+	</form> -->
+
+	<div style="position: fixed;  top: 30%;  left: 50%;transform: translate(-50%, -50%); ">
+        <form method="POST" enctype="html/text" action="{% url 'login' %}" >
+            {% csrf_token %}
+
+            <!-- {{usfo.as_table}} -->
+            {{ usfo.non_field_errors }}
+            <div style="margin-bottom: 10px;">
+            		<!-- {{ usfo.email.errors }} -->
+                    <div >{{usfo.email.label}}</div>
+                    <div>{{usfo.email}}</div>
+            </div>
+            
+            <div style="margin-bottom: 5px;">
+                    <div >{{usfo.password.label}}</div>
+                    <div>{{usfo.password}}</div>
+            </div>
+            <!-- {{ usfo.errors }} -->
+            <!-- <div>{{usfo.password.label}}<br>{{usfo.password}}</div> -->
+
+        	<input type="submit" name="submit" value="SUBMIT">
+        </form>
+    </div>
+
+
 </body>
 </html>

@@ -33,3 +33,11 @@ class User(AbstractBaseUser):
 	
 
 	objects=UserManager()
+
+
+class Food(models.Model):
+	user = models.ForeignKey(User,on_delete=models.CASCADE)
+	food_item_decription = models.CharField(max_length=50)
+	latitude = models.DecimalField(max_digits=18,decimal_places=15)
+	longitude = models.DecimalField(max_digits=18,decimal_places=15)
+	phone_number = models.IntegerField()

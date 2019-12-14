@@ -19,7 +19,7 @@ def login(request):
 			user=authenticate(email=email,password=password)
 			if user:
 				if user.is_active:
-					auth_login(request,user)
+					auth_login(request,user,backend='users.backend.NewBackend')
 					print(request.user.name,request.user.email)
 					return HttpResponseRedirect(reverse('simp'))
 				else:
@@ -40,7 +40,7 @@ def signup(request):
 			print(usfo)
 			us.set_password(usfo.clean_password2())
 			us.save()
-			auth_login(request,us)
+			auth_login(request,us,backend='users.backend.NewBackend')
 			return HttpResponseRedirect(reverse('simp'))
 		else:
 			print(usfo.errors)
@@ -49,3 +49,7 @@ def signup(request):
 @login_required
 def simp(request):
 	return	render(request,'users/simple.html')
+
+@login_required
+def simp1(request):
+	return	render(request,'users/simp1.html')

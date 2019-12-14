@@ -29,8 +29,10 @@
     </style>
   </head>{% load static %}
   <body>
-    <div id="map"></div>
-    <div><img src="{% static 'images/locate3.png' %}" style="position: fixed;  top: 50%;  left: 50%;  transform: translate(-50%, -50%); padding-bottom: 45px;"></div>
+    <div style="position: relative;">
+      <div id="map" style="margin: 0 auto; width: 1000px;height: 500px;"></div>
+    <div><img src="{% static 'images/locate3.png' %}" style="position: absolute;  top: 50%;  left: 50%;  transform: translate(-50%, -50%); padding-bottom: 45px;"></div>
+    </div>
     <script>
       var map;
       function initMap() {
