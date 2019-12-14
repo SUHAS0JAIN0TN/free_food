@@ -77,8 +77,12 @@ WSGI_APPLICATION = 'free_food.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'dcer990m41k5o2',
+        'USER': 'pnorckffhxbbxx',
+        'HOST': 'ec2-174-129-203-86.compute-1.amazonaws.com',
+        'PORT': '5432',
+        'PASSWORD': 'ef48e11b22326c6100ad634c3d38f2d05dbea1e1e2297581cf7c67b83c956d0e',
     }
 }
 
