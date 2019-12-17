@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from .forms import UserForm, UserLoginForm
 from django.urls import reverse
-from django.contrib.auth import logout,authenticate
+from django.contrib.auth import logout as auth_logout,authenticate
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.decorators import login_required
 # Create your views here.
@@ -52,4 +52,19 @@ def simp(request):
 
 @login_required
 def simp1(request):
+	if(request.method=="POST"):
+		data=request.POST
+		return	render(request,'users/simp1.html',{'data':data})
 	return	render(request,'users/simp1.html')
+
+def logout(request):
+	auth_logout(request)
+	return HttpResponseRedirect(reverse('index'))
+
+
+# import random
+# def fun():
+# 	a='4'
+# 	while(a=='4'):
+# 		print(random.choice(['a','b','c','d','e','f','g','h'])+random.choice(['1','2','3','4','5','6','7','8']))
+# 		a=input()

@@ -25,18 +25,31 @@
         height: 100%;
         margin: 0;
         padding: 0;
+        font-family: Arial, Helvetica, sans-serif;;
       }
     </style>
   </head>{% load static %}
   <body>
-    <div id="map"></div>
-    <div><img src="{% static 'images/locate3.png' %}" style="position: fixed;  top: 50%;  left: 50%;  transform: translate(-50%, -50%); padding-bottom: 45px;"></div>
+      
+      <div style="margin-top: 40px;margin-left: 1000px; float: left;position: fixed;z-index: 2;">
+
+                          <a href="{% url 'simp1' %}"><div style="display: inline-block;font-size: 25px; margin-right: 10px;color: #cccccc;">Give-Food</div></a>
+                          <a href="{% url 'logout' %}"><div style="display: inline-block;font-size: 25px; margin-right: 10px;color: #cccccc;">Logout</div></a>
+
+          </div>
+
+        <!-- <section> -->
+            <div id="map" style="height: 100%;"></div>
+            <div><img src="{% static 'images/locate3.png' %}" style="position: fixed;  top: 50%;  left: 50%;  transform: translate(-50%, -50%); padding-bottom: 45px;"></div>    
+        <!-- </section> -->
+      
+      
     <script>
       var map;
       function initMap() {
         map = new google.maps.Map(document.getElementById('map'), {
-          center: {lat: -34.397, lng: 150.644},
-          zoom: 8,
+          center: {lat: 12.96, lng: 77.58},
+          zoom: 11,
           fullscreenControl: false
         });
         map.addListener('click', function(e) {
