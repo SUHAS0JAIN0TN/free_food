@@ -25,16 +25,51 @@
         height: 100%;
         margin: 0;
         padding: 0;
-        font-family: Arial, Helvetica, sans-serif;;
+        font-family: Arial, Helvetica, sans-serif;
       }
     </style>
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      /*html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }*/
+      #goCenterUI, #setCenterUI {
+        background-color: #fff;
+        border: 2px solid #fff;
+        border-radius: 3px;
+        box-shadow: 0 2px 6px rgba(0,0,0,.3);
+        cursor: pointer;
+        float: left;
+        margin-bottom: 22px;
+        text-align: center;
+      }
+      #goCenterText, #setCenterText {
+        color: rgb(25,25,25);
+        font-family: Roboto,Arial,sans-serif;
+        font-size: 15px;
+        line-height: 25px;
+        padding-left: 5px;
+        padding-right: 5px;
+      }
+      #setCenterUI {
+        margin-left: 12px;
+      }
+    </style>
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   </head>{% load static %}
   <body style="background-image: url({% static 'images/OG1FLx.jpg' %});">
     <div style="margin-bottom: 40px;">
-    <div style="margin: 0 auto; width: 1000px;height: 60px;">
+    <div style="margin: 0 auto; width: 1165px;height: 60px;">
 
-      <div style="margin-top: 30px; float: right;">
+      <div style="margin-top: 38px; float: right;">
 
                         <a href="{% url 'simp' %}"><div style="display: inline-block;font-size: 25px; margin-right: 10px;color: black;">Find-Food</div></a>
                         <a href="{% url 'logout' %}"><div style="display: inline-block;font-size: 25px; margin-right: 10px;color: black;">Logout</div></a>
@@ -42,19 +77,24 @@
       </div>
     </div>
     <div style="margin: 0 auto; width: 1000px;height: 100%;">
-      <form method="POST" enctype="html/text" action="{% url 'simp1' %}">
-        {% csrf_token %}
-      <label id='des' style="font-size: 28px;">Description</label><br>
-
-      <textarea style="width: 500px;height: 200px;font-size: 16px;" name='description' id="word_count"></textarea>
-      Text left: <span id="word_left">200</span><br>
-      
-      <label id='drop' style="font-size: 28px;">Drop the Location</label><br>
+      <label id='drop' style="font-size: 28px;margin-left:5px;">Drop the Location</label><br>
       <div style="position: relative; margin-top: 30px;margin-bottom: 20px;">
         <div id="map" style="margin: 0 auto; width: 1000px;height: 500px;"></div>
         <div><img src="{% static 'images/locate3.png' %}" style="position: absolute;  top: 50%;  left: 50%;  transform: translate(-50%, -50%); padding-bottom: 45px;"></div>
       </div>
-      <input type="submit" name="submit" value="SUBMIT">
+      <form method="POST" enctype="html/text" action="{% url 'simp1' %}">
+        {% csrf_token %}
+      <label id='des' style="font-size: 28px;margin-left:5px;">Description</label><br>
+
+      <textarea style="width: 500px;height: 200px;font-size: 16px;margin-top: 10px;margin-bottom: 10px;" name='description' id="word_count"></textarea>
+      Text left: <span id="word_left">200</span><br>
+      
+      
+      <input id="latitide" type="text" name="latitide" hidden>
+      <input id="longitude" type="text" name="longitude" hidden>
+      <label for="phone_number" style="font-size: 28px;margin-left:5px;">Phone Number</label><br>
+      <input id='phone_number' type="text" name="phone_number" style="margin-top: 10px;margin-bottom: 10px;"><br>
+      <input id="submit" type="submit" name="submit" value="SUBMIT">
       </form>
 
 {{ data }}
@@ -62,17 +102,142 @@
     </div>
     </div>
     <script>
+      $(document).ready(function(){
+        $('#submit').click(function(event){
+          if($('#phone_number').val().length!=10){
+            event.preventDefault();
+            alert('Phone Number should have exactly 10 numbers');
+          }
+          if($('#word_count').val().length==0){
+            event.preventDefault();
+            alert('Add Description');
+          }
+          if($('#longitude').val().length==0 || $('#latitide').val().length==0){
+            event.preventDefault();
+            alert('Drop The Location');
+          }
+        });
+      });
+      
       var map;
+      var chicago = {lat: 41.85, lng: -87.65};
+
+      function CenterControl(controlDiv, map, center) {
+        // We set up a variable for this since we're adding event listeners
+        // later.
+        var control = this;
+
+        // Set the center property upon construction
+        control.center_ = center;
+        controlDiv.style.clear = 'both';
+
+        // // Set CSS for the control border
+        // var goCenterUI = document.createElement('div');
+        // goCenterUI.id = 'goCenterUI';
+        // goCenterUI.title = 'Click to recenter the map';
+        // controlDiv.appendChild(goCenterUI);
+
+        // // Set CSS for the control interior
+        // var goCenterText = document.createElement('div');
+        // goCenterText.id = 'goCenterText';
+        // goCenterText.innerHTML = 'Center Map';
+        // goCenterUI.appendChild(goCenterText);
+
+        // Set CSS for the setCenter control border
+        var setCenterUI = document.createElement('div');
+        setCenterUI.id = 'setCenterUI';
+        setCenterUI.title = 'Click to change the center of the map';
+        controlDiv.appendChild(setCenterUI);
+
+        // Set CSS for the control interior
+        var setCenterText = document.createElement('div');
+        setCenterText.id = 'setCenterText';
+        setCenterText.innerHTML = 'Drop the Point';
+        setCenterUI.appendChild(setCenterText);
+
+        // // Set up the click event listener for 'Center Map': Set the center of
+        // // the map
+        // // to the current center of the control.
+        // goCenterUI.addEventListener('click', function() {
+        //   var currentCenter = control.getCenter();
+        //   map.setCenter(currentCenter);
+        // });
+
+        // Set up the click event listener for 'Set Center': Set the center of
+        // the control to the current center of the map.
+        setCenterUI.addEventListener('click', function() {
+          var newCenter = map.getCenter();
+          control.setCenter(newCenter);
+        });
+      }
+
+      /**
+       * Define a property to hold the center state.
+       * @private
+       */
+      CenterControl.prototype.center_ = null;
+
+      /**
+       * Gets the map center.
+       * @return {?google.maps.LatLng}
+       */
+      // CenterControl.prototype.getCenter = function() {
+      //   return this.center_;
+      // };
+
+      /**
+       * Sets the map center.
+       * @param {?google.maps.LatLng} center
+       */
+      var marker;
+      CenterControl.prototype.setCenter = function(center) {
+        this.center_ = center;
+        $('#latitide').val(center.lat());
+        $('#longitude').val(center.lng());
+        if (marker==undefined){
+          marker = new google.maps.Marker({
+            position: map.getCenter(),
+            map: map
+          });
+        }
+        else{
+          marker.setPosition(map.getCenter());
+        }
+        console.log("sim",$('#latitide').val(),$('#longitude').val())
+      };
+
+
+
       function initMap() {
         map = new google.maps.Map(document.getElementById('map'), {
           center: {lat: 12.96, lng: 77.58},
           zoom: 11,
           fullscreenControl: false
         });
-        map.addListener('click', function(e) {
-          placeMarkerAndPanTo(e.latLng, map);
-          console.log(e.latLng.toString())
-        });
+        // map.addListener('click', function(e) {
+        //   // placeMarkerAndPanTo(e.latLng, map);
+        //   // marker.setPosition(this.getCenter());
+        //   if (marker==undefined){
+        //     marker = new google.maps.Marker({
+        //       position: map.getCenter(),
+        //       map: map
+        //     });
+        //   }
+        //   else{
+        //     marker.setPosition(map.getCenter());
+        //   }
+        //   console.log(e.latLng.toString())
+        // });
+
+
+        var centerControlDiv = document.createElement('div');
+        var centerControl = new CenterControl(centerControlDiv, map, chicago);
+        // https://developers-dot-devsite-v2-prod.appspot.com/maps/documentation/javascript/examples/control-custom-state
+        centerControlDiv.index = 1;
+        centerControlDiv.style['padding-top'] = '10px';
+        map.controls[google.maps.ControlPosition.BOTTOM_CENTER].push(centerControlDiv);
+
+
       }
 
       function placeMarkerAndPanTo(latLng, map) {
@@ -80,9 +245,12 @@
           position: latLng,
           map: map
         });
-        map.panTo(latLng);
+        // map.panTo(latLng);
 
       }
+
+
+      // setting text length in textare 
       $(document).ready(function() {
         $("#word_count").on('keyup', function() {
             var words = this.value.length;

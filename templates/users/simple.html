@@ -28,6 +28,7 @@
         font-family: Arial, Helvetica, sans-serif;;
       }
     </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   </head>{% load static %}
   <body>
       
@@ -40,9 +41,8 @@
 
         <!-- <section> -->
             <div id="map" style="height: 100%;"></div>
-            <div><img src="{% static 'images/locate3.png' %}" style="position: fixed;  top: 50%;  left: 50%;  transform: translate(-50%, -50%); padding-bottom: 45px;"></div>    
+            <!-- <div><img src="{% static 'images/locate3.png' %}" style="position: fixed;  top: 50%;  left: 50%;  transform: translate(-50%, -50%); padding-bottom: 45px;"></div>   -->  
         <!-- </section> -->
-      
       
     <script>
       var map;
@@ -52,10 +52,10 @@
           zoom: 11,
           fullscreenControl: false
         });
-        map.addListener('click', function(e) {
-          placeMarkerAndPanTo(e.latLng, map);
-          console.log(e.latLng.toString())
-        });
+        // map.addListener('click', function(e) {
+        //   placeMarkerAndPanTo(e.latLng, map);
+        //   console.log(e.latLng.toString())
+        // });
       }
 
       function placeMarkerAndPanTo(latLng, map) {
@@ -66,6 +66,31 @@
         map.panTo(latLng);
 
       }
+      $.getJSON('{% url "simp_api" %}',function(data){
+        console.log(data.length);
+        var markers=[];
+        var infoWindows=[];
+        for (d of data){
+          var marker = new google.maps.Marker({
+            position: new google.maps.LatLng({lat:parseFloat(d.latitude),lng:parseFloat(d.longitude)}),
+            map: map
+          });
+          console.log(d['latitude']);
+          var infowindow = new google.maps.InfoWindow();
+          // marker.addListener('click', function() {
+          //   infowindow.open(map, marker);
+          // });
+          var content="<b>Name:</b> "+d['name']+"<br>"+"<b>Description:</b> "+d['description']+"<br><b>Phone Number:</b> "+d['phone_number'];
+          google.maps.event.addListener(marker,'click', (function(marker,content,infowindow){ 
+              return function() {
+                  infowindow.setContent(content);
+                  infowindow.open(map,marker);
+              };
+          })(marker,content,infowindow));  
+        }
+        console.log(markers);
+        console.log(infoWindows);
+      });
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyClfKSXKMJ32Uogcogc-idokYjhCcGyd2Y&callback=initMap"
     async defer></script>
