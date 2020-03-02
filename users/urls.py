@@ -12,4 +12,6 @@ urlpatterns = [
 	path('simp-api/',views.simp_api,name='simp_api'),
 	path('give-food/',views.simp1,name='simp1'),
 	path('logout/',views.logout,name='logout'),
+	path('sample/',views.sample,name='sample'),
+	path('charge/',views.charge,name='charge'),
 ]+static(settings.STATIC_URL, document_root=settings.STATIC_DIR)

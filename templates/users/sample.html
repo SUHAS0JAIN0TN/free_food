@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>sample</title>
+</head>
+<body>
+	<form action="{% url 'charge' %}" method="POST">
+		{% csrf_token %}
+	<h2>Buy for $5.00</h2>
+	<script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+	    data-key="pk_test_lGL0ISbcweQmTXLdllsdWyJy00IlldVQxw"
+	    data-description="A Django Charge"
+	    data-amount="500"
+	    data-locale="auto">
+	</script>
+	</form>
+</body>
+</html>
