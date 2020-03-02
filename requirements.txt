@@ -1,3 +1,4 @@
+stripe
 django
 gunicorn
 django-heroku
