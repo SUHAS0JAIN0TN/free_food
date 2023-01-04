@@ -11,8 +11,8 @@ import json
 # from django import forms
 # from django.core.exceptions import ValidationError
 # Create your views here.
-import stripe
-stripe.api_key="sk_test_LawwjNY7OxWiZhp0Lhlil5Ii00o98kax3x"
+# import stripe
+# stripe.api_key="sk_test_LawwjNY7OxWiZhp0Lhlil5Ii00o98kax3x"
 def index(request):
 	usfo=UserForm()
 	return render(request,'users/index.html',{'usfo':usfo})
@@ -120,15 +120,15 @@ def logout(request):
 def sample(request):
 	return	render(request,'users/sample.html')
 
-def charge(request):
-	if request.method == 'POST':
-		charge = stripe.Charge.create(
-			amount=500,
-			currency='inr',
-			description='A Django charge',
-			source=request.POST['stripeToken']
-		)
-	return render(request,'users/charge.html')
+# def charge(request):
+# 	if request.method == 'POST':
+# 		charge = stripe.Charge.create(
+# 			amount=500,
+# 			currency='inr',
+# 			description='A Django charge',
+# 			source=request.POST['stripeToken']
+# 		)
+# 	return render(request,'users/charge.html')
 # import random
 # def fun():
 # 	a='4'

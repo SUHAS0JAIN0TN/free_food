@@ -12,6 +12,21 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 
+def _env(key, default=None, cast_func=str):
+    value = os.getenv(key)
+    if value is None:
+        print("[WARNING] EnvVar (%s) missing; Default: %s" % (key, default))
+        return default
+    return cast_func(value)
+
+
+
+def cast_bool(value):
+    if value == '1':
+        return True
+    return False
+
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -23,9 +38,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'gpz9f+lx5b#&t)d6--abc^8jbbilqj)g=whbcfv6buat+cl+sm'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = _env('debug', default=False, cast_func=cast_bool)
 
-ALLOWED_HOSTS = ['0.0.0.0','ancient-fortress-17652.herokuapp.com']
+ALLOWED_HOSTS = ['127.0.0.1','ancient-fortress-17652.herokuapp.com']
 
 # Application definition
 
@@ -74,15 +89,16 @@ WSGI_APPLICATION = 'free_food.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
+# psql -U postgres -hlocalhost -p 5433 -W
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'dcer990m41k5o2',
-        'USER': 'pnorckffhxbbxx',
-        'HOST': 'ec2-174-129-203-86.compute-1.amazonaws.com',
-        'PORT': '5432',
-        'PASSWORD': 'ef48e11b22326c6100ad634c3d38f2d05dbea1e1e2297581cf7c67b83c956d0e',
+        'NAME': _env("food_db_name"),
+        'USER': _env("food_db_user"),
+        'HOST': _env("food_db_host"),
+        'PORT': _env("food_db_port"),
+        'PASSWORD': _env("food_db_password"),
     }
 }
 

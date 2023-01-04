@@ -13,5 +13,5 @@ urlpatterns = [
 	path('give-food/',views.simp1,name='simp1'),
 	path('logout/',views.logout,name='logout'),
 	path('sample/',views.sample,name='sample'),
-	path('charge/',views.charge,name='charge'),
+	# path('charge/',views.charge,name='charge'),
 ]+static(settings.STATIC_URL, document_root=settings.STATIC_DIR)
